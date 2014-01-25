@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import render
 from pymongo import MongoClient
+from django.core.mail import send_mail
 client = MongoClient()
 db = client.freemail_database
 
@@ -9,6 +10,8 @@ import settings
 
 import os
 SALT = os.environ.get('DJANGO_SALT')
+
+import hashlib
 
 def index(request):
     # return HttpResponse(settings.TEMPLATE_DIRS)
@@ -29,9 +32,13 @@ def getAllUsers(request):
 def sendConf(request, email):
     confs = db.confs
     new_conf = { "email" : email,
-                 "hash"  : generate_hash(email + SALT)}
+                 "hash"  : hashlib.sha1(email + SALT).hexdigest() }
     confs.insert(new_conf)
-    sendgrid_email(email, "Click <a href='#'>here</a> to say goodbye to emails")
+    send_mail('[FreeMail] Email Confirmation',
+              'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
+              'contact@freemail.com',
+              [email],
+              fail_silently=False)
     return HttpResponse('Confirmation page created')
 
 def testPath(request, path):
