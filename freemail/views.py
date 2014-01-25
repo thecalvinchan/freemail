@@ -1,6 +1,6 @@
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from pymongo import MongoClient
 from django.core.mail import send_mail
 client = MongoClient()
@@ -43,3 +43,8 @@ def sendConf(request, email):
 
 def testPath(request, path):
     return HttpResponse(path)
+
+def confirm(request, email, hashed):
+    return redirect('/index.html?email=' + email + '&hash=' + hashed)
+    # confs = db.confs
+    # conf = confs.find_one({"email": email, "hash": hashed})
