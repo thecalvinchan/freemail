@@ -20,7 +20,7 @@ urlpatterns = patterns('',
     #serves all other static files
 
     # url(r'^(?P<path>css/\w+.css)$', views.testPath, name = 'testPath'),
-    url(r'^(?P<path>(\w+\/)*(\w+\.)+\w+)$', 'django.views.static.serve', {'document_root': 'public'}),
+    url(r'^(?P<path>((\w|\-)+\/)*((\w|\-)+\.)+(\w|\-)+)$', 'django.views.static.serve', {'document_root': 'public'}),
     url(r'', views.index, name='index'),
     #url(r'^(?P<path>js/\w+.js)$', 'django.views.static.serve', {'document_root': 'public'}),
     # url(r'^(?P<path>\.css)$', 'django.views.static.serve', {'document_root': '/public'}),
