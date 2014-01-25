@@ -1,6 +1,74 @@
 <div class="row">
     <div class="small-12 columns">
-        <h2>Hello World</h2>
-        <a href="#">TEST</a>
+        <div id="window-wrapper">
+            <div id="window"> 
+
+                <div id="top-bar"> 
+                    <div id="window-button-close" class="window-button left"></div>
+                    <div id="window-button-min" class="window-button left"></div>
+                    <div id="window-button-expand" class="window-button left"></div>
+                    <p class="text-center">Freemail</p>
+                    <p id="top-bar-buttons">
+                        <a href="#"><img src="/img/email.png"></a>
+                        <a href="#" class="right"><img src="/img/wtf.png"></a>
+                        <a href="#" class="right"><img src="/img/font.png"></a>
+                        <a href="#" class="right"><img src="/img/attachment.png"></a>
+                    </p>
+                </div>
+
+                <div id="email-headers" class="small-12 columns">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <div class="row">
+                                <div class="small-4 medium-2  columns">
+                                    <label class="right inline">To:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="email" value="me@freemail.com">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-4 medium-2 columns">
+                                    <label class="right inline">CC:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="email" value="me@facebook.com, me@twitter.com, me@plus.google.com">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-4 medium-2 columns">
+                                    <label class="right inline">Subject:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="text" value="Freemail - Phase out email. Forever">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="email-body" class="small-12 columns">
+                    <div class="row">
+                        <div id="email-textarea" class="small-12 columns" contenteditable="true">
+                            <p id="typearea"></p>
+                            <p>On Jan 25, 2014, at 04:20 PM, Freemail &lt;contact@freemail.com&gt; wrote:</p> 
+                            <blockquote>
+                            <p>Email has been around for over 40 years. Within these past 40 years, there have been countless attempts at replacing email. But that's not something that can be done overnight. If we want to fully replace email with another social medium, we have to ease ourself into communicating without it. We have to phase out email, one step at a time.</p>
+                            <p>Introducing Freemail, a service that helps you ease out of using email. We forward any emails that you receive to your social network of choice. There, you can reply directly to the message, and we will make sure that it gets delivered back to the correct recipient.</p>
+                            </blockquote>
+                        </div>
+                    </div>    
+                </div>
+                <script>
+                        var textarea = document.getElementById('typearea');
+                        var text = [
+                            "Hello there,",
+                            "Welcome to Freemail.",
+                            "Let's get started. Press the SEND button to send your last email... ever."
+                        ];
+                        animateType(textarea,text);
+                </script>
+            </div>
+        </div>
     </div>
 </div>
