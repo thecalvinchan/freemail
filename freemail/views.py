@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 import datetime
 import random
 import string
+import json
 client = MongoClient()
 db = client.freemail_database
 
@@ -63,7 +64,7 @@ def confirmation(request):
                      "date" : datetime.datetime.utcnow(),
                      "hash"  : generate_hash(password + generate_salt())}
         confs.insert(new_conf)
-    return HttpResponse('Confirmation page created')
+    return HttpResponse(json.dumps(new_conf), content_type="application/json")
         
 
 def recieveEmailINTHEASS(request):
