@@ -14,11 +14,11 @@ angular.module('freemail').controller('SignupController', ['$scope','$http','$co
                 email: $scope.email,
                 password: $scope.password
             };
-            console.log($scope.email);
+            console.log(data);
             var config = {
                 method : 'POST',
                 url : '/confirmation',
-                data : data,
+                data : JSON.stringify(data),
                 xsrfHeaderName : 'X-CSRFToken',
                 xsrfCookieName : 'csrftoken'
             };
