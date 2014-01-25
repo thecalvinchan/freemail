@@ -13,7 +13,7 @@ angular.module('freemail').controller('SignupController', ['$scope','$http',
                 password: $scope.password
             };
             console.log($scope.email);
-            $http.post('/confirmation', data).success(function() {
+            $http.post('/confirmation', data).success(function(data) {
                 var modal = document.getElementById('signupModal');
                 modal.innerHTML = '\
                     <h4 class="text-center">Awesome! Confirmation Email Sent.</h4>\
@@ -21,6 +21,7 @@ angular.module('freemail').controller('SignupController', ['$scope','$http',
                     <p class="text-center">Please check your email for further instructions.</p>\
                     <a class="close-reveal-modal">&#215;</a>\
                 ';
+		console.log(data);
             }).error(function(err) {
                 var modal = document.getElementById('signupModal');
                 modal.innerHTML = '\
