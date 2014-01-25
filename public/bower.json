@@ -8,6 +8,7 @@
   "dependencies": {
     "angular": "latest",
     "angular-route": "latest",
+    "angular-cookies": "latest",
     "foundation": "zurb/bower-foundation"
   },
   "description": "Ease out of email.",

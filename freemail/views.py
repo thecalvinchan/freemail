@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, render_to_response
+from django.core.context_processors import csrf
+from django.views.decorators.csrf import ensure_csrf_cookie
 from pymongo import MongoClient
 from django.core.mail import send_mail
 import datetime
@@ -19,9 +21,12 @@ SALT = os.environ.get('DJANGO_SALT')
 
 import hashlib
 
+@ensure_csrf_cookie
 def index(request):
     # return HttpResponse(settings.TEMPLATE_DIRS)
-    return render(request, 'index.html')
+    c = {}
+    c.update(csrf(request))
+    return render(request,'index.html',c)
 
 def addUser(request, gmail, fb):
     emails = db.emails

@@ -1,3 +1,3 @@
 'use strict';
 
-angular.module('freemail',['ngRoute']);
+angular.module('freemail',['ngRoute','ngCookies']);

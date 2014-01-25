@@ -1,5 +1,7 @@
-angular.module('freemail').controller('SignupController', ['$scope','$http',
-    function ($scope,$http) {
+angular.module('freemail').controller('SignupController', ['$scope','$http','$cookies',
+    function ($scope,$http,$cookies) {
+	$http
+	console.log($cookies.csrftoken);
         $scope.email;
         $scope.password;
         $scope.confirmpassword;
@@ -13,7 +15,14 @@ angular.module('freemail').controller('SignupController', ['$scope','$http',
                 password: $scope.password
             };
             console.log($scope.email);
-            $http.post('/confirmation', data).success(function(data) {
+            var config = {
+                method : 'POST',
+                url : '/confirmation',
+                data : data,
+                xsrfHeaderName : 'X-CSRFToken',
+                xsrfCookieName : 'csrftoken'
+            };
+            $http(config).success(function(data) {
                 var modal = document.getElementById('signupModal');
                 modal.innerHTML = '\
                     <h4 class="text-center">Awesome! Confirmation Email Sent.</h4>\
