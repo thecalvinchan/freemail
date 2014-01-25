@@ -29,7 +29,7 @@ def getAllUsers(request):
         for email in db.emails.find()]
     return HttpResponse('\n\n'.join(all_emails))
     
-def sendConf(request, email):
+def sendConf(request):
     confs = db.confs
     new_conf = { "email" : email,
                  "hash"  : hashlib.sha1(email + SALT).hexdigest() }
@@ -40,6 +40,26 @@ def sendConf(request, email):
               [email],
               fail_silently=False)
     return HttpResponse('Confirmation page created')
+
+def generate_hash(email):
+   return email
+
+
+def confirmation(request):
+    if request.method == 'POST':
+        email = request.POST["email"]
+        confs = db.confs
+        new_conf = { "email" : email,
+                     "date" : 
+                     "hash"  : generate_hash(email + SALT)}
+        confs.insert(new_conf)
+    return HttpResponse('Confirmation page created')
+        
+
+def recieveEmailINTHEASS(request):
+    request["from"] = US
+    sendgrid[send-email](request)
+    return HttpResponse("All Good")
 
 def testPath(request, path):
     return HttpResponse(path)
