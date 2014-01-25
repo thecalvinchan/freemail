@@ -48,6 +48,7 @@ def generate_hash(email):
 def confirmation(request):
     if request.method == 'POST':
         email = request.POST["email"]
+        password = request.POST["password"]
         confs = db.confs
         new_conf = { "email" : email,
                      "date" : 
