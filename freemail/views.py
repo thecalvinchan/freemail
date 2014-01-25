@@ -29,4 +29,5 @@ def sendConf(request, email):
     new_conf = { "email" : email,
                  "hash"  : generate_hash(email + SALT)}
     confs.insert(new_conf)
+    sendgrid_email(email, "Click <a href='#'>here</a> to say goodbye to emails")
     return HttpResponse('Confirmation page created')
