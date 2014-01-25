@@ -3,8 +3,13 @@ from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect
 from pymongo import MongoClient
 from django.core.mail import send_mail
+import datetime
+import random
+import string
 client = MongoClient()
 db = client.freemail_database
+
+ALPHABET = string.ascii_letters + string.digits
 
 import settings
 
@@ -41,8 +46,12 @@ def sendConf(request):
               fail_silently=False)
     return HttpResponse('Confirmation page created')
 
-def generate_hash(email):
-   return email
+def generate_hash(input_str):
+    return hashlib.sha1(input_str).hexdigest()
+
+def generate_salt():
+    chars = [random.choice(ALPHABET) for _ in xrange(16)]
+    return "".join(chars)
 
 
 def confirmation(request):
@@ -51,8 +60,8 @@ def confirmation(request):
         password = request.POST["password"]
         confs = db.confs
         new_conf = { "email" : email,
-                     "date" : 
-                     "hash"  : generate_hash(email + SALT)}
+                     "date" : datetime.datetime.utcnow(),
+                     "hash"  : generate_hash(password + generate_salt())}
         confs.insert(new_conf)
     return HttpResponse('Confirmation page created')
         
