@@ -33,3 +33,6 @@ def sendConf(request, email):
     confs.insert(new_conf)
     sendgrid_email(email, "Click <a href='#'>here</a> to say goodbye to emails")
     return HttpResponse('Confirmation page created')
+
+def testPath(request, path):
+    return HttpResponse(path)
