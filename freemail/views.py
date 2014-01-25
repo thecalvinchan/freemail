@@ -1,16 +1,18 @@
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
+from django.shortcuts import render
 from pymongo import MongoClient
 client = MongoClient()
 db = client.freemail_database
+
+import settings
 
 import os
 SALT = os.environ.get('DJANGO_SALT')
 
 def index(request):
-    t = TemplateResponse(request,'../public/index.html')
-    t.render()
-    return HttpResponse(t.content)
+    # return HttpResponse(settings.TEMPLATE_DIRS)
+    return render(request, 'index.html')
 
 def addUser(request, gmail, fb):
     emails = db.emails
