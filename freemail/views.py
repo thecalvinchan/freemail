@@ -47,7 +47,7 @@ def sendConf(request):
     confs.insert(new_conf)
     send_mail('[FreeMail] Email Confirmation',
               'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
-              'contact@freemail.com',
+              'amanaamazing@gmail.com',
               [email],
               fail_silently=False)
     return HttpResponse('Confirmation page created')
@@ -79,6 +79,18 @@ def recieveEmailINTHEASS(request):
 
 def testPath(request, path):
     return HttpResponse(path)
+
+def inbound(request):
+    tests = db.tests
+    new_test = { "data" : request }
+    tests.insert(new_test)
+    print(tests)
+    return HttpResponse('')
+
+def printTest(request):
+    tests = db.tests
+    test = tests.find_one()
+    return HttpResponse(test)
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
