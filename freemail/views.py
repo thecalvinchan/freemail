@@ -90,7 +90,7 @@ def inbound(request):
         data = request.POST.copy()
         from_email = data["from"]
         subject = data["subject"]
-        data["subject"] = "from: [" + from_email + "] subject: " + subject
+        data["subject"] = "from: [" + from_email + "] subject: [" + subject + "]"
         print(from_email)
         print(subject)
 
