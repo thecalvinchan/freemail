@@ -20,14 +20,6 @@ db = client.freemail_database
 
 ALPHABET = string.ascii_letters + string.digits
 
-import settings
-EMAIL_HOST = settings.EMAIL_HOST
-EMAIL_HOST_USER = settings.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = settings.EMAIL_HOST_PASSWORD
-EMAIL_PORT = settings.EMAIL_PORT
-EMAIL_USE_TLS = settings.EMAIL_USE_TLS
-
-
 import hashlib
 
 @ensure_csrf_cookie
@@ -68,7 +60,6 @@ def generate_salt():
     chars = [random.choice(ALPHABET) for _ in xrange(16)]
     return "".join(chars)
 
-
 def confirmation(request):
     if request.method == 'POST':
         data = json.loads(request.body)
@@ -88,14 +79,14 @@ def confirmation(request):
                   [email],
                   fail_silently=False)
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
-        return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
+    return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
 
 def recieveEmailINTHEASS(request):
     request["from"] = US
     sendgrid[send-email](request)
     return HttpResponse("All Good")
 
-@csrf_response_exempt
+@csrf_exempt
 def inbound(request):
     print(request.method)
     return HttpResponse('')
