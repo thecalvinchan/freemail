@@ -180,10 +180,13 @@ def inbound(request):
             email_data["from"] = data["from"]
             email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
             email_data["text"] = data["text"]
-
+            print(id)
+            print(email_data["to"])
+            print(email_data["from"])
+            print(user)
+            print(in_db)
         if in_db:
             send_mail(email_data["subject"], email_data["text"], email_data["from"], [email_data["to"]], fail_silently=False)
-
         # users = db.users
         # to_addr = users.find_one({"email": from_email})['fb']
         
