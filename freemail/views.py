@@ -23,6 +23,8 @@ db = client.freemail_database
 
 ALPHABET = string.ascii_letters + string.digits
 
+import hashlib
+
 @ensure_csrf_cookie
 def index(request):
     # return HttpResponse(settings.TEMPLATE_DIRS)
@@ -79,10 +81,7 @@ def confirmation(request):
         data = json.loads(request.body)
         email = data['email']
         password = data['password']
-<<<<<<< HEAD
         salt = generate_salt()
-=======
->>>>>>> can't figure out csrf_response_exempt
         # email = request.POST.get('email', None)
         # password = request.POST.get('password', None)
         users = db.users
@@ -178,21 +177,3 @@ def printTest(request):
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
-<<<<<<< HEAD
-=======
-    # confs = db.confs
-    # conf = confs.find_one({"email": email, "hash": hashed})
-
-@csrf_response_exempt
-def inbound(request):
-    print(request.method)
-    return HttpResponse('')
-
-def testPath(request, path):
-    return HttpResponse(path)
-
-def printTest(request):
-    tests = db.tests
-    test = tests.find_one()
-    return HttpResponse(test)
->>>>>>> need to fix inbound
