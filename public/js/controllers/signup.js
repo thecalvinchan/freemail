@@ -1,6 +1,5 @@
 angular.module('freemail').controller('SignupController', ['$scope','$http','$cookies',
     function ($scope,$http,$cookies) {
-	$http
 	console.log($cookies.csrftoken);
         $scope.email;
         $scope.password;
