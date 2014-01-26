@@ -15,7 +15,6 @@ import string
 import json
 import os
 import hashlib
-import sendgrid
 import re
 
 SALT = os.environ.get('DJANGO_SALT')
@@ -100,8 +99,25 @@ def confirmation(request):
                   [email],
                   fail_silently=False)
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
-    else:
-        return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
+    elif request.method == 'GET':
+        data = request.GET
+        email = data.get('email')
+        hash = data.get('id')
+        users = db.users
+        try:
+            user = users.find_one({"email" : email})
+        except:
+            #user does not exist
+            return HttpResponse(json.dumps({"error":"User does not exist"}), content_type="application/json",status=500)
+        if user["confhash"] != hash:
+            #error
+            return HttpResponse(json.dumps({"error":"Invalid authentication"}), content_type="application/json",status=500)
+        user["confirmed"] = True
+        users.save(user)
+        c = {}
+        c.update(csrf(request))
+        return render(request,'index.html',c)
+
 
 def login(request):
     if request.method == 'POST':
@@ -140,7 +156,6 @@ def get_from_email_from_subject(subject):
 @csrf_exempt
 def inbound(request):
     if request.method == 'POST':
-        print(request.POST)
         data = request.POST.copy()
         email_data =  {}
         in_db = False
@@ -161,9 +176,6 @@ def inbound(request):
             email_data["from"] = "test@freemail.bymail.in"
             email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
             email_data["text"] = data["text"]
-
-        print(data)
-        print(email_data)
 
         if in_db:
             send_mail(email_data["subject"], email_data["text"], email_data["from"], [email_data["to"]], fail_silently=False)
