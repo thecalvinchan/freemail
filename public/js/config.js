@@ -4,8 +4,13 @@ angular.module('freemail').config(['$routeProvider',
         when('/', {
             templateUrl: '/views/index.html'
         }).
-        when('/confirmation-sent', {
-            templateUrl: '/views/confirmation-sent.html'
+        when('/confirmation', {
+            templateUrl: '/views/confirmation.html',
+            controller: 'LoginController'
+        }).
+        when('/fb-auth', {
+            templateUrl: '/views/fb-auth.html',
+            controller: 'FBOAuthController'
         }).
         otherwise({
             redirectTo: '/'
