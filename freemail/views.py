@@ -169,11 +169,14 @@ def inbound(request):
             email_data["subject"] = data["subject"]
             email_data["text"] = data["text"]
         else:
-            user = users.find_one({"email" : data["from"]})
+            #give users ao2ds781d@freemail420.com
+            id = data["to"].split('@')[0]
+            user = users.find_one({"confhash" : id})
             if user:
                 in_db = True
                 email_data["to"] = user["facebook"]
-            email_data["from"] = "test@freemail.bymail.in"
+            #email_data["from"] = "test@freemail.bymail.in"
+            email_data["from"] = data["from"]
             email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
             email_data["text"] = data["text"]
 
