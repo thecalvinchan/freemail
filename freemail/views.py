@@ -84,7 +84,18 @@ def confirmation(request):
 
 @csrf_exempt
 def inbound(request):
+    if request.method == 'POST':
+        data = request.POST.copy()
+        from_email = data["from"]
+        subject = data["subject"]
+        data["subject"] = "from: [" + from_email + "] subject: " + subject
+        subject = data["subject"]
+        data["from"] = "amanaamazing@gmail.com"
+        print(from_email)
+        print(subject)
+        send_mail(subject, data["text"], data["from"], ["jeffreywang93@gmail.com"], fail_silently=False)
     return HttpResponse('')
+
 
 def testPath(request, path):
     return HttpResponse(path)
