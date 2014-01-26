@@ -146,7 +146,6 @@ def inbound(request):
         send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
     return HttpResponse('')
 
-
 def testPath(request, path):
     return HttpResponse(path)
 
