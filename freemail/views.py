@@ -12,8 +12,7 @@ import json
 
 import os
 SALT = os.environ.get('DJANGO_SALT')
-MONGO_URI = os.environ.get('MONGO_URI')
-
+MONGO_URI = os.environ.get('MONGO_URI') 
 client = MongoClient(MONGO_URI)
 db = client.freemail_database
 
@@ -65,15 +64,20 @@ def generate_salt():
 
 def confirmation(request):
     if request.method == 'POST':
-        email = request.POST["email"]
-        password = request.POST["password"]
+        post = request.POST
+        post = post.copy()
+        email = post.get('email')
+	password = post.get('password')
+        # email = request.POST.get('email', None)
+        # password = request.POST.get('password', None)
         confs = db.confs
         new_conf = { "email" : email,
                      "date" : datetime.datetime.utcnow(),
-                     "hash"  : generate_hash(password + generate_salt())}
+                     #"hash"  : generate_hash(password + generate_salt())
+	}
         confs.insert(new_conf)
-    return HttpResponse(json.dumps(new_conf), content_type="application/json")
-        
+        return HttpResponse(json.dumps(post), content_type="application/json")
+    return HttpResponse("WHAT NOT POST?!?!?")
 
 def recieveEmailINTHEASS(request):
     request["from"] = US
