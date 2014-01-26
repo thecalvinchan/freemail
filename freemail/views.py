@@ -19,6 +19,11 @@ db = client.freemail_database
 ALPHABET = string.ascii_letters + string.digits
 
 import settings
+EMAIL_HOST = settings.EMAIL_HOST
+EMAIL_HOST_USER = settings.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = settings.EMAIL_HOST_PASSWORD
+EMAIL_PORT = settings.EMAIL_PORT
+EMAIL_USE_TLS = settings.EMAIL_USE_TLS
 
 
 import hashlib
@@ -49,7 +54,7 @@ def sendConf(request):
     confs.insert(new_conf)
     send_mail('[FreeMail] Email Confirmation',
               'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
-              'amanaamazing@gmail.com',
+              'test@freemail.bymail.in',
               [email],
               fail_silently=False)
     return HttpResponse('Confirmation page created')
@@ -64,20 +69,24 @@ def generate_salt():
 
 def confirmation(request):
     if request.method == 'POST':
-        post = request.POST
-        post = post.copy()
-        email = post.get('email')
-	password = post.get('password')
+	data = json.loads(request.body)
+        email = data['email']
+	password = data['password']
         # email = request.POST.get('email', None)
         # password = request.POST.get('password', None)
         confs = db.confs
         new_conf = { "email" : email,
                      "date" : datetime.datetime.utcnow(),
-                     #"hash"  : generate_hash(password + generate_salt())
+                     "hash"  : generate_hash(password + generate_salt())
 	}
         confs.insert(new_conf)
-        return HttpResponse(json.dumps(post), content_type="application/json")
-    return HttpResponse("WHAT NOT POST?!?!?")
+        send_mail('[FreeMail] Email Confirmation',
+                  'Confirm your account by clicking on the following link: ' + 'http://localhost:5000/confirm/?email=' + email + '&id=' + new_conf["hash"],
+                  'amanaamazing@gmail.com',
+                  [email],
+                  fail_silently=False)
+        return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
+        return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
 
 def recieveEmailINTHEASS(request):
     request["from"] = US
