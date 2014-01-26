@@ -1,11 +1,10 @@
+from __future__ import print_function
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.core.context_processors import csrf
-# from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.csrf import *
-# from django.views.decorators.csrf import ensure_csrf_cookie
-# from django.views.decorators.csrf import csrf_response_exempt
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import ensure_csrf_cookie
 from pymongo import MongoClient
 from django.core.mail import send_mail
 from bson.objectid import ObjectId
@@ -80,7 +79,10 @@ def confirmation(request):
         data = json.loads(request.body)
         email = data['email']
         password = data['password']
+<<<<<<< HEAD
         salt = generate_salt()
+=======
+>>>>>>> can't figure out csrf_response_exempt
         # email = request.POST.get('email', None)
         # password = request.POST.get('password', None)
         users = db.users
@@ -181,12 +183,13 @@ def confirm(request, email, hashed):
     # confs = db.confs
     # conf = confs.find_one({"email": email, "hash": hashed})
 
+@csrf_response_exempt
 def inbound(request):
-    tests = db.tests
-    new_test = { "data" : request }
-    tests.insert(new_test)
-    print(tests)
+    print(request.method)
     return HttpResponse('')
+
+def testPath(request, path):
+    return HttpResponse(path)
 
 def printTest(request):
     tests = db.tests
