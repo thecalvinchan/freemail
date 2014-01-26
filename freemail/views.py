@@ -14,6 +14,7 @@ import string
 import json
 import os
 import hashlib
+import sendgrid
 
 SALT = os.environ.get('DJANGO_SALT')
 MONGO_URI = os.environ.get('MONGO_URI') 
@@ -85,15 +86,21 @@ def confirmation(request):
 @csrf_exempt
 def inbound(request):
     if request.method == 'POST':
+        print(request.POST)
         data = request.POST.copy()
         from_email = data["from"]
         subject = data["subject"]
         data["subject"] = "from: [" + from_email + "] subject: " + subject
-        subject = data["subject"]
-        data["from"] = "amanaamazing@gmail.com"
         print(from_email)
         print(subject)
-        send_mail(subject, data["text"], data["from"], ["jeffreywang93@gmail.com"], fail_silently=False)
+
+        #s = sendgrid.Sendgrid('Juwang', os.environ.get('DJANGO_SALT'), secure=True)
+        #message = sendgrid.Message("jeffreywang93@gmail.com", subject, data["text"], "<p>HTML</p>")
+        #print(message)
+        #message.add_to("robin@sendgrid.com")
+        #print(message)
+        #s.smtp.send(message)
+        send_mail(subject, data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
     return HttpResponse('')
 
 
