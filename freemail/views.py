@@ -74,11 +74,11 @@ def confirmation(request):
                      "hash"  : generate_hash(password + generate_salt())
         }
         confs.insert(new_conf)
-        send_mail('[FreeMail] Email Confirmation',
-                  'Confirm your account by clicking on the following link: ' + 'http://localhost:5000/confirm/?email=' + email + '&id=' + new_conf["hash"],
-                  'amanaamazing@gmail.com',
-                  [email],
-                  fail_silently=False)
+        #s = sendgrid.Sendgrid('Juwang', SALT, secure=True)
+        #message = sendgrid.Message("jeffreywang93@gmail.com", '[FreeMail] Email Confirmation', 'Confirm your account by clicking on the following link: ' + 'http://localhost:5000/confirm/?email=' + email + '&id=' + new_conf["hash"], "<p>HTML</p>")
+        #message.add_to(email)
+        #s.smtp.send(message)
+        send_mail('[FreeMail] Email Confirmation', 'Confirm your account by clicking on the following link: ' + 'http://localhost:5000/confirm/?email=' + email + '&id=' + new_conf["hash"], 'amanaamazing@gmail.com', [email], fail_silently=False)
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
     else:
         return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
@@ -94,10 +94,10 @@ def inbound(request):
         print(from_email)
         print(subject)
 
-        #s = sendgrid.Sendgrid('Juwang', os.environ.get('DJANGO_SALT'), secure=True)
-        #message = sendgrid.Message("jeffreywang93@gmail.com", subject, data["text"], "<p>HTML</p>")
+        #s = sendgrid.Sendgrid('Juwang', SALT, secure=True)
+        #message = sendgrid.Message(data["from"], data["subject"], data["text"], "<p>HTML</p>")
         #print(message)
-        #message.add_to("robin@sendgrid.com")
+        #message.add_to("Aman Agarwal <amanaamazing@gmail.com>")
         #print(message)
         #s.smtp.send(message)
         send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
