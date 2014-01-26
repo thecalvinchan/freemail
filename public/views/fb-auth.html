@@ -49,14 +49,33 @@
 
                 <div id="email-body" class="small-12 columns">
                     <div class="row">
-                        <div id="email-textarea" class="small-12 columns text-center" >
+                        <div id="email-textarea" class="small-12 columns" >
                             <br>
                             <p>Connect your Facebook account and we will forward all your future emails to your FB Inbox. Interact with your message from there, and never touch your inbox again.</p>
                             <div class="row">
-                                <div class="small-12 medium-6 large-4 columns small-centered">
+                                <div class="small-12 medium-6 large-4 columns">
                                     <button type="submit" class="button expand" ng-click="auth()">Login with Facebook</button>
                                 </div>
                             </div>
+                            <blockquote>
+                                <br>
+                                <p>Your account has been activated. Please login to continue.</p>
+                                <div class="row">
+                                    <div class="small-12 medium-6 large-4 columns">
+                                        <input type="email" placeholder="email" ng-model="email" disabled>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="small-12 medium-6 large-4 columns">
+                                        <input type="password" placeholder="password" ng-model="password" disabled>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="small-12 medium-6 large-4 columns">
+                                        <button type="submit" class="button expand" disabled>Login</button>
+                                    </div>
+                                </div>
+                            </blockquote>
                         </div>
                     </div>    
                 </div>
