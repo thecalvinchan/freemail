@@ -9,15 +9,18 @@ import datetime
 import random
 import string
 import json
-client = MongoClient()
+
+import os
+SALT = os.environ.get('DJANGO_SALT')
+MONGO_URI = os.environ.get('MONGO_URI')
+
+client = MongoClient(MONGO_URI)
 db = client.freemail_database
 
 ALPHABET = string.ascii_letters + string.digits
 
 import settings
 
-import os
-SALT = os.environ.get('DJANGO_SALT')
 
 import hashlib
 
@@ -96,3 +99,4 @@ def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
     # confs = db.confs
     # conf = confs.find_one({"email": email, "hash": hashed})
+
