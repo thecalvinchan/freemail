@@ -100,7 +100,7 @@ def inbound(request):
         #message.add_to("robin@sendgrid.com")
         #print(message)
         #s.smtp.send(message)
-        send_mail(subject, data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
+        send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
     return HttpResponse('')
 
 
