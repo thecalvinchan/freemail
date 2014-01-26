@@ -1,7 +1,9 @@
+from __future__ import print_function
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.core.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
 from pymongo import MongoClient
 from django.core.mail import send_mail
@@ -69,9 +71,9 @@ def generate_salt():
 
 def confirmation(request):
     if request.method == 'POST':
-	data = json.loads(request.body)
+        data = json.loads(request.body)
         email = data['email']
-	password = data['password']
+        password = data['password']
         # email = request.POST.get('email', None)
         # password = request.POST.get('password', None)
         confs = db.confs
@@ -93,15 +95,13 @@ def recieveEmailINTHEASS(request):
     sendgrid[send-email](request)
     return HttpResponse("All Good")
 
+@csrf_response_exempt
+def inbound(request):
+    print(request.method)
+    return HttpResponse('')
+
 def testPath(request, path):
     return HttpResponse(path)
-
-def inbound(request):
-    tests = db.tests
-    new_test = { "data" : request }
-    tests.insert(new_test)
-    print(tests)
-    return HttpResponse('')
 
 def printTest(request):
     tests = db.tests
