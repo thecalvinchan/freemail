@@ -89,6 +89,11 @@ def recieveEmailINTHEASS(request):
 @csrf_exempt
 def inbound(request):
     print(request.method)
+    print request
+    # tests = db.tests
+    # new_test = { "data" : request }
+    # tests.insert(new_test)
+    # print(tests)
     return HttpResponse('')
 
 def testPath(request, path):
