@@ -71,7 +71,8 @@ def user(request):
         except:
             #user cannot be found
             return HttpResponse(json.dumps({"error":"An error occured."}), content_type="application/json",status=500)
-        return HttpResponse(json.dumps({"success": True}), content_type="application/json")
+        user = db.users.find_one({ "_id" : ObjectId(user_id) })
+        return HttpResponse(json.dumps({"success": True, "userid": user["confhash"]}), content_type="application/json")
     
 @ensure_csrf_cookie
 def confirmation(request):

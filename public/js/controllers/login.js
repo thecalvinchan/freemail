@@ -47,7 +47,8 @@ angular.module('freemail').controller('FBOAuthController', ['$scope','$http','$c
                             xsrfCookieName : 'csrftoken'
                         };
                         $http(config).success(function(data) {
-                            $location.path('/success');
+                            console.log(data);
+                            $location.path('/success?forward='+data.userid);
                         }).error(function(err) {
                             console.log(err);
                             document.getElementById('email-textarea').innerHTML=err;

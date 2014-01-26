@@ -12,6 +12,10 @@ angular.module('freemail').config(['$routeProvider',
             templateUrl: '/views/fb-auth.html',
             controller: 'FBOAuthController'
         }).
+        when('/success', {
+            templateUrl: '/views/success.html',
+            controller: 'SuccessController'
+        }).
         otherwise({
             redirectTo: '/'
         });
