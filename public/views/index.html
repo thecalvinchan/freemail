@@ -1,11 +1,116 @@
+<div id="signupModal" class="reveal-modal medium" data-reveal ng-controller="SignupController">
     <h4 class="text-center">Let's Get Started.</h4>
     <hr>
-    <p class="text-center">Enter your email address below:</p>
+    <p class="text-center">Create an account:</p>
     <!--
     <p class="text-center"><a href="https://accounts.google.com/o/oauth2/auth?response_type=token&client_id=455241859695-1ffat7t1n909a0f5ph3u2dee18sicins.apps.googleusercontent.com&scope=email%20https%3A%2F%2Fapps-apis.google.com%2Fa%2Ffeeds%2Femailsettings%2F2.0%2F&state=auth&redirect_uri=http%3A%2F%2Flocalhost:8000%2Fauthenticated" class="button">Login with Gmail</a></p>
     -->
-    <form ng-submit="submit()" ng-controller="SignupController">
-        <input type="email" placeholder="me@gmail.com" ng-model="email">
-        <button type="submit" class="button">Submit</button>
-    </form>
+    <div class="row">
+        <div class="small-12 large-6 large-centered columns">
+            <div data-alert class="alert-box warning" ng-if="error">
+                {{error}}
+                <a href="#" class="close">&times;</a>
+            </div>
+        </div>
+    </div>
+    <div >
+        <div class="row">
+            <div class="small-12 large-6 large-centered columns">
+                <input type="email" placeholder="email" ng-model="email">
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 large-6 large-centered columns">
+                <input type="password" placeholder="password" ng-model="password">
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 large-6 large-centered columns">
+                <input type="password" placeholder="retype password" ng-model="confirmpassword">
+            </div>
+        </div>
+        <div class="row">
+            <div class="small-12 large-6 large-centered columns">
+                <button type="submit" class="button expand" ng-click="submit()">Submit</button>
+            </div>
+        </div>
+    </div>
     <a class="close-reveal-modal">&#215;</a>
+</div>
+
+<div class="row">
+    <div class="small-12 columns">
+        <div id="window-wrapper">
+            <div id="window"> 
+
+                <div id="top-bar"> 
+                    <div id="window-button-close" class="window-button left"></div>
+                    <div id="window-button-min" class="window-button left"></div>
+                    <div id="window-button-expand" class="window-button left"></div>
+                    <p class="text-center">Freemail</p>
+                    <p id="top-bar-buttons">
+                        <a href="#" data-reveal-id="signupModal" data-reveal><img src="/img/email.png"></a>
+                        <a href="#" class="right"><img src="/img/wtf.png"></a>
+                        <a href="#" class="right"><img src="/img/font.png"></a>
+                        <a href="#" class="right"><img src="/img/attachment.png"></a>
+                    </p>
+                </div>
+
+                <div id="email-headers" class="small-12 columns">
+                    <div class="row">
+                        <div class="small-12 columns">
+                            <div class="row">
+                                <div class="small-4 medium-2  columns">
+                                    <label class="right inline">To:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="email" value="me@freemail.com">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-4 medium-2 columns">
+                                    <label class="right inline">CC:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="email" value="me@facebook.com, me@twitter.com, me@plus.google.com">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="small-4 medium-2 columns">
+                                    <label class="right inline">Subject:</label>
+                                </div>
+                                <div class="small-8 medium-10 columns">
+                                    <input type="text" value="Re: Freemail - Phase out email. Forever">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="email-body" class="small-12 columns">
+                    <div class="row">
+                        <div id="email-textarea" class="small-12 columns" contenteditable="true">
+                            <p id="typearea"></p>
+                            <p>On Jan 25, 2014, at 04:20 PM, Freemail &lt;contact@freemail.com&gt; wrote:</p> 
+                            <blockquote>
+                            <p>Email has been around for over 40 years. Within these past 40 years, there have been countless attempts at replacing email. But that's not something that can be done overnight. If we want to fully replace email with another social medium, we have to ease ourself into communicating without it. We have to phase out email, one step at a time.</p>
+                            <p>Introducing Freemail, a service that helps you ease out of using email. We forward any emails that you receive to your social network of choice. There, you can reply directly to the message, and we will make sure that it gets delivered back to the correct recipient.</p>
+                            </blockquote>
+                        </div>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+        var textarea = document.getElementById('typearea');
+        var text = [
+            "Hello there,",
+            "Welcome to Freemail.",
+            "Let's get started. Press the SEND button to send your last email... ever."
+        ];
+        animateType(textarea,text);
+        $(document).foundation();
+</script>

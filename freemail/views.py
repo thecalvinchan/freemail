@@ -1,10 +1,16 @@
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from pymongo import MongoClient
 from django.core.mail import send_mail
+import datetime
+import random
+import string
+import json
 client = MongoClient()
 db = client.freemail_database
+
+ALPHABET = string.ascii_letters + string.digits
 
 import settings
 
@@ -29,7 +35,7 @@ def getAllUsers(request):
         for email in db.emails.find()]
     return HttpResponse('\n\n'.join(all_emails))
     
-def sendConf(request, email):
+def sendConf(request):
     confs = db.confs
     new_conf = { "email" : email,
                  "hash"  : hashlib.sha1(email + SALT).hexdigest() }
@@ -40,6 +46,31 @@ def sendConf(request, email):
               [email],
               fail_silently=False)
     return HttpResponse('Confirmation page created')
+
+def generate_hash(input_str):
+    return hashlib.sha1(input_str).hexdigest()
+
+def generate_salt():
+    chars = [random.choice(ALPHABET) for _ in xrange(16)]
+    return "".join(chars)
+
+
+def confirmation(request):
+    if request.method == 'POST':
+        email = request.POST["email"]
+        password = request.POST["password"]
+        confs = db.confs
+        new_conf = { "email" : email,
+                     "date" : datetime.datetime.utcnow(),
+                     "hash"  : generate_hash(password + generate_salt())}
+        confs.insert(new_conf)
+    return HttpResponse(json.dumps(new_conf), content_type="application/json")
+        
+
+def recieveEmailINTHEASS(request):
+    request["from"] = US
+    sendgrid[send-email](request)
+    return HttpResponse("All Good")
 
 def testPath(request, path):
     return HttpResponse(path)
@@ -55,3 +86,8 @@ def printTest(request):
     tests = db.tests
     test = tests.find_one()
     return HttpResponse(test)
+
+def confirm(request, email, hashed):
+    return redirect('/index.html?email=' + email + '&hash=' + hashed)
+    # confs = db.confs
+    # conf = confs.find_one({"email": email, "hash": hashed})
