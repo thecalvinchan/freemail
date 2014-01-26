@@ -176,8 +176,8 @@ def inbound(request):
             if user:
                 in_db = True
                 email_data["to"] = user["facebook"]
-            #email_data["from"] = "test@freemail.bymail.in"
-            email_data["from"] = data["from"]
+            # email_data["from"] = "test@freemail.bymail.in"
+            email_data["from"] = user["email"]
             email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
             email_data["text"] = data["text"]
             print(id)
