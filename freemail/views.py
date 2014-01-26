@@ -88,7 +88,6 @@ def recieveEmailINTHEASS(request):
 
 @csrf_exempt
 def inbound(request):
-    print(request.method)
     return HttpResponse('')
 
 def testPath(request, path):
