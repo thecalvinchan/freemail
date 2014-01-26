@@ -16,6 +16,7 @@ import json
 import os
 import hashlib
 import sendgrid
+import re
 
 SALT = os.environ.get('DJANGO_SALT')
 MONGO_URI = os.environ.get('MONGO_URI') 
@@ -125,17 +126,53 @@ def login(request):
         sessions.update({ "user_id" : user["_id"] } , { "$set" : { "hash" : session } } ,True)
         return HttpResponse(json.dumps({"action":action,"user_id":str(user["_id"]),"session":session}), content_type="application/json")
         
+def isFbEmail(email):
+    result = re.match(r'^\w+@facebook.com', email)
+    if result:
+        return True
+    else:
+        return False
+
+def get_from_email_from_subject(subject):
+    result = re.match(r'^.*?from: \[(.*?)\].*?$', subject)
+    return result.group(1)
 
 @csrf_exempt
 def inbound(request):
     if request.method == 'POST':
         print(request.POST)
         data = request.POST.copy()
-        from_email = data["from"]
-        subject = data["subject"]
-        data["subject"] = "from: [" + from_email + "] subject: [" + subject + "]"
-        print(from_email)
-        print(subject)
+        email_data =  {}
+        in_db = False
+        users = db.users
+        if isFbEmail(data["from"]):
+            send_to_email_in_subject_and_set_from_to_be_gmail
+            email_data["to"] = get_from_email_from_subject(data["subject"])
+            user = users.find_one({"facebook" : data["from"]})
+            if user:
+                in_db = True
+                email_data["from"] = user["email"]
+            email_data["subject"] = data["subject"]
+            email_data["text"] = data["text"]
+        else:
+            send_to_corresponding_fb_email_from_db_and_set_from_to_be_us
+            user = users.find_one({"email" : data["from"]})
+            if user:
+                in_db = True
+                email_data["to"] = user["facebook"]
+            email_data["from"] = "test@freemail.bymail.in"
+            email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
+            email_data["text"] = data["text"]
+
+        print(data)
+        print(email_data)
+
+        if in_db:
+            send_mail(email_data["subject"], email_data["text"], email_data["from"], [email_data["to"]], fail_silently=False)
+
+        # users = db.users
+        # to_addr = users.find_one({"email": from_email})['fb']
+        
 
         #s = sendgrid.Sendgrid('Juwang', os.environ.get('DJANGO_SALT'), secure=True)
         #message = sendgrid.Message("jeffreywang93@gmail.com", subject, data["text"], "<p>HTML</p>")
@@ -143,8 +180,8 @@ def inbound(request):
         #message.add_to("robin@sendgrid.com")
         #print(message)
         #s.smtp.send(message)
-        send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
-    return HttpResponse('')
+        return HttpResponse('INBOUND POST')
+    return HttpResponse('INBOUND GET')
 
 def testPath(request, path):
     return HttpResponse(path)
