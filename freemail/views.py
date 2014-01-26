@@ -95,7 +95,7 @@ def confirmation(request):
         }
         users.insert(new_conf)
         send_mail('[FreeMail] Email Confirmation',
-                  'Confirm your account by clicking on the following link: ' + 'http://localhost:5000/confirmation?email=' + email + '&id=' + new_conf["confhash"],
+                  'Confirm your account by clicking on the following link: ' + 'https://5d9e96cc.ngrok.com/confirmation?email=' + email + '&id=' + new_conf["confhash"],
                   'amanaamazing@gmail.com',
                   [email],
                   fail_silently=False)
@@ -154,13 +154,22 @@ def get_from_email_from_subject(subject):
     result = re.match(r'^.*?from: \[(.*?)\].*?$', subject)
     return result.group(1)
 
+def format_email(to_addr):
+    return to_addr.split('<')[1][:-1]
+
 @csrf_exempt
 def inbound(request):
+    print "A"
     if request.method == 'POST':
+        print "B"
         data = request.POST.copy()
+        print "C"
         email_data =  {}
+        print "D"
         in_db = False
+        print "E"
         users = db.users
+        print "F"
         if isFbEmail(data["from"]):
             email_data["to"] = get_from_email_from_subject(data["subject"])
             user = users.find_one({"facebook" : data["from"]})
@@ -170,14 +179,20 @@ def inbound(request):
             email_data["subject"] = data["subject"]
             email_data["text"] = data["text"]
         else:
+            print "C"
             #give users ao2ds781d@freemail420.com
-            id = data["to"].split('@')[0]
-            user = users.find_one({"confhash" : id})
+            # id = format_email(data["to"])
+            id = data["to"]
+            print "C"
+            print(id)
+            user = users.find_one({"email" : id})
+            print "C"
             if user:
+                print(user)
                 in_db = True
                 email_data["to"] = user["facebook"]
             # email_data["from"] = "test@freemail.bymail.in"
-            email_data["from"] = user["email"]
+            email_data["from"] = data["from"]
             email_data["subject"] = "id: [" + generate_salt() + "], from: [" + data["from"] + "], subject: " + data["subject"]
             email_data["text"] = data["text"]
             print(id)

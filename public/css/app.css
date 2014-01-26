@@ -1,6 +1,7 @@
 body {
     background-color: #2ECC71;
     background-image: url('/img/background.jpg');
+    padding-top: 50px;
 }
 /** Window **/
 #window-wrapper {
