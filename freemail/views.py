@@ -2,7 +2,10 @@ from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.core.context_processors import csrf
-from django.views.decorators.csrf import ensure_csrf_cookie
+# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import *
+# from django.views.decorators.csrf import ensure_csrf_cookie
+# from django.views.decorators.csrf import csrf_response_exempt
 from pymongo import MongoClient
 from django.core.mail import send_mail
 from bson.objectid import ObjectId
@@ -10,24 +13,16 @@ import datetime
 import random
 import string
 import json
-
 import os
+import hashlib
+import sendgrid
+
 SALT = os.environ.get('DJANGO_SALT')
 MONGO_URI = os.environ.get('MONGO_URI') 
 client = MongoClient(MONGO_URI)
 db = client.freemail_database
 
 ALPHABET = string.ascii_letters + string.digits
-
-import settings
-EMAIL_HOST = settings.EMAIL_HOST
-EMAIL_HOST_USER = settings.EMAIL_HOST_USER
-EMAIL_HOST_PASSWORD = settings.EMAIL_HOST_PASSWORD
-EMAIL_PORT = settings.EMAIL_PORT
-EMAIL_USE_TLS = settings.EMAIL_USE_TLS
-
-
-import hashlib
 
 @ensure_csrf_cookie
 def index(request):
@@ -36,29 +31,29 @@ def index(request):
     c.update(csrf(request))
     return render(request,'index.html',c)
 
-def addUser(request, gmail, fb):
-    emails = db.emails
-    new_email = { "gmail" : gmail,
-                  "facebook" : fb }
-    emails.insert(new_email)
-    return HttpResponse("Gmail is: " + gmail + ". Facebook is: " + fb)
+# def addUser(request, gmail, fb):
+#     emails = db.emails
+#     new_email = { "gmail" : gmail,
+#                   "facebook" : fb }
 
-def getAllUsers(request):
-    all_emails = ["facebook: '" + email[u'facebook'] + "' and gmail: '" + email[u'gmail'] + "'"
-        for email in db.emails.find()]
-    return HttpResponse('\n\n'.join(all_emails))
+#     return HttpResponse("Gmail is: " + gmail + ". Facebook is: " + fb)
+
+# def getAllUsers(request):
+#     all_emails = ["facebook: '" + email[u'facebook'] + "' and gmail: '" + email[u'gmail'] + "'"
+#         for email in db.emails.find()]
+#     return HttpResponse('\n\n'.join(all_emails))
     
-def sendConf(request):
-    users = db.users
-    new_conf = { "email" : email,
-                 "hash"  : hashlib.sha1(email + SALT).hexdigest() }
-    users.insert(new_conf)
-    send_mail('[FreeMail] Email Confirmation',
-              'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
-              'test@freemail.bymail.in',
-              [email],
-              fail_silently=False)
-    return HttpResponse('Confirmation page created')
+# def sendConf(request):
+#     confs = db.confs
+#     new_conf = { "email" : email,
+#                  "hash"  : hashlib.sha1(email + SALT).hexdigest() }
+#     confs.insert(new_conf)
+#     send_mail('[FreeMail] Email Confirmation',
+#               'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
+#               'test@freemail.bymail.in',
+#               [email],
+#               fail_silently=False)
+#     return HttpResponse('Confirmation page created')
 
 def generate_hash(input_str):
     return hashlib.sha1(input_str).hexdigest()
@@ -117,6 +112,7 @@ def confirmation(request):
                   [email],
                   fail_silently=False)
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
+    else:
         return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
     if request.method == 'GET':
         data = request.GET
@@ -161,20 +157,29 @@ def login(request):
         return HttpResponse(json.dumps({"action":action,"user_id":str(user["_id"]),"session":session}), content_type="application/json")
         
 
-def recieveEmailINTHEASS(request):
-    request["from"] = US
-    sendgrid[send-email](request)
-    return HttpResponse("All Good")
+@csrf_exempt
+def inbound(request):
+    if request.method == 'POST':
+        print(request.POST)
+        data = request.POST.copy()
+        from_email = data["from"]
+        subject = data["subject"]
+        data["subject"] = "from: [" + from_email + "] subject: [" + subject + "]"
+        print(from_email)
+        print(subject)
+
+        #s = sendgrid.Sendgrid('Juwang', os.environ.get('DJANGO_SALT'), secure=True)
+        #message = sendgrid.Message("jeffreywang93@gmail.com", subject, data["text"], "<p>HTML</p>")
+        #print(message)
+        #message.add_to("robin@sendgrid.com")
+        #print(message)
+        #s.smtp.send(message)
+        send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
+    return HttpResponse('')
+
 
 def testPath(request, path):
     return HttpResponse(path)
-
-def inbound(request):
-    tests = db.tests
-    new_test = { "data" : request }
-    tests.insert(new_test)
-    print(tests)
-    return HttpResponse('')
 
 def printTest(request):
     tests = db.tests
@@ -183,6 +188,3 @@ def printTest(request):
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
-    # users = db.users
-    # conf = users.find_one({"email": email, "hash": hashed})
-
