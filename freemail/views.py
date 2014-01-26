@@ -1,10 +1,11 @@
-from __future__ import print_function
 from django.http import HttpResponse
 from django.template.response import TemplateResponse
 from django.shortcuts import render, redirect, render_to_response
 from django.core.context_processors import csrf
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.csrf import ensure_csrf_cookie
+# from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import *
+# from django.views.decorators.csrf import ensure_csrf_cookie
+# from django.views.decorators.csrf import csrf_response_exempt
 from pymongo import MongoClient
 from django.core.mail import send_mail
 from bson.objectid import ObjectId
@@ -23,8 +24,6 @@ db = client.freemail_database
 
 ALPHABET = string.ascii_letters + string.digits
 
-import hashlib
-
 @ensure_csrf_cookie
 def index(request):
     # return HttpResponse(settings.TEMPLATE_DIRS)
@@ -36,7 +35,6 @@ def index(request):
 #     emails = db.emails
 #     new_email = { "gmail" : gmail,
 #                   "facebook" : fb }
-
 #     return HttpResponse("Gmail is: " + gmail + ". Facebook is: " + fb)
 
 # def getAllUsers(request):
@@ -103,24 +101,6 @@ def confirmation(request):
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
     else:
         return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
-    if request.method == 'GET':
-        data = request.GET
-        email = data.get('email')
-        hash = data.get('id')
-        users = db.users
-        try:
-            user = users.find_one({"email" : email})
-        except:
-            #user does not exist
-            return HttpResponse(json.dumps({"error":"User does not exist"}), content_type="application/json",status=500)
-        if user["confhash"] != hash:
-            #error
-            return HttpResponse(json.dumps({"error":"Invalid authentication"}), content_type="application/json",status=500)
-        user["confirmed"] = True
-        users.save(user)
-        c = {}
-        c.update(csrf(request))
-        return render(request,'index.html',c)
 
 def login(request):
     if request.method == 'POST':
@@ -148,6 +128,7 @@ def login(request):
 
 @csrf_exempt
 def inbound(request):
+<<<<<<< HEAD
     if request.method == 'POST':
         print(request.POST)
         data = request.POST.copy()
@@ -165,6 +146,9 @@ def inbound(request):
         #s.smtp.send(message)
         send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
     return HttpResponse('')
+=======
+    return HttpResponse('YAY')
+>>>>>>> this is wrong but ill fix at merge
 
 
 def testPath(request, path):
@@ -174,6 +158,15 @@ def printTest(request):
     tests = db.tests
     test = tests.find_one()
     return HttpResponse(test)
+<<<<<<< HEAD
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
+=======
+<<<<<<< HEAD
+=======
+
+def confirm(request, email, hashed):
+    return redirect('/index.html?email=' + email + '&hash=' + hashed)
+>>>>>>> this is wrong but ill fix at merge
+>>>>>>> this is wrong but ill fix at merge
