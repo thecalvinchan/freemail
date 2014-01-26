@@ -128,7 +128,6 @@ def login(request):
 
 @csrf_exempt
 def inbound(request):
-<<<<<<< HEAD
     if request.method == 'POST':
         print(request.POST)
         data = request.POST.copy()
@@ -146,9 +145,6 @@ def inbound(request):
         #s.smtp.send(message)
         send_mail(data["subject"], data["text"], data["from"], ["Aman Agarwal <amanaamazing@gmail.com>"], fail_silently=False)
     return HttpResponse('')
-=======
-    return HttpResponse('YAY')
->>>>>>> this is wrong but ill fix at merge
 
 
 def testPath(request, path):
@@ -158,15 +154,6 @@ def printTest(request):
     tests = db.tests
     test = tests.find_one()
     return HttpResponse(test)
-<<<<<<< HEAD
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
-=======
-<<<<<<< HEAD
-=======
-
-def confirm(request, email, hashed):
-    return redirect('/index.html?email=' + email + '&hash=' + hashed)
->>>>>>> this is wrong but ill fix at merge
->>>>>>> this is wrong but ill fix at merge
