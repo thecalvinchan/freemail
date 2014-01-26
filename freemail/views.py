@@ -79,21 +79,10 @@ def confirmation(request):
                   [email],
                   fail_silently=False)
         return HttpResponse(json.dumps({"email": email, "success": True}), content_type="application/json")
-<<<<<<< HEAD
-    return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
-
-def recieveEmailINTHEASS(request):
-    request["from"] = US
-    sendgrid[send-email](request)
-    return HttpResponse("All Good")
-
-@csrf_exempt
-=======
     else:
         return HttpResponse(json.dumps({"email": email, "success": False}), content_type="application/json",status=500)
 
-@csrf_response_exempt
->>>>>>> this is wrong but ill fix at merge
+@csrf_exempt
 def inbound(request):
     return HttpResponse('YAY')
 
