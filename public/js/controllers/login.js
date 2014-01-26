@@ -48,7 +48,7 @@ angular.module('freemail').controller('FBOAuthController', ['$scope','$http','$c
                         };
                         $http(config).success(function(data) {
                             console.log(data);
-                            $location.path('/success?forward='+data.userid);
+                            $location.path('/success/'+data.userid);
                         }).error(function(err) {
                             console.log(err);
                             document.getElementById('email-textarea').innerHTML=err;
@@ -59,5 +59,12 @@ angular.module('freemail').controller('FBOAuthController', ['$scope','$http','$c
                 }
             });
         };
+    }
+]);
+
+angular.module('freemail').controller('SuccessController', ['$scope','$routeParams',
+    function($scope,$routeParams) {
+        $scope.forward = $routeParams.userid + '@freemail.bymail.in';
+        console.log($scope.forward);
     }
 ]);

@@ -12,7 +12,7 @@ angular.module('freemail').config(['$routeProvider',
             templateUrl: '/views/fb-auth.html',
             controller: 'FBOAuthController'
         }).
-        when('/success', {
+        when('/success/:userid', {
             templateUrl: '/views/success.html',
             controller: 'SuccessController'
         }).
