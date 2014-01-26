@@ -43,18 +43,6 @@ def index(request):
 #         for email in db.emails.find()]
 #     return HttpResponse('\n\n'.join(all_emails))
     
-# def sendConf(request):
-#     confs = db.confs
-#     new_conf = { "email" : email,
-#                  "hash"  : hashlib.sha1(email + SALT).hexdigest() }
-#     confs.insert(new_conf)
-#     send_mail('[FreeMail] Email Confirmation',
-#               'Confirm your account by clicking on the following link: ' + '<a href="localhost:5000/confirm/' + email + '/' + new_conf["hash"] + '">Here</a>',
-#               'test@freemail.bymail.in',
-#               [email],
-#               fail_silently=False)
-#     return HttpResponse('Confirmation page created')
-
 def generate_hash(input_str):
     return hashlib.sha1(input_str).hexdigest()
 
@@ -188,3 +176,20 @@ def printTest(request):
 
 def confirm(request, email, hashed):
     return redirect('/index.html?email=' + email + '&hash=' + hashed)
+<<<<<<< HEAD
+=======
+    # confs = db.confs
+    # conf = confs.find_one({"email": email, "hash": hashed})
+
+def inbound(request):
+    tests = db.tests
+    new_test = { "data" : request }
+    tests.insert(new_test)
+    print(tests)
+    return HttpResponse('')
+
+def printTest(request):
+    tests = db.tests
+    test = tests.find_one()
+    return HttpResponse(test)
+>>>>>>> need to fix inbound
